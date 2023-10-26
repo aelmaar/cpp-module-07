@@ -6,32 +6,60 @@
 /*   By: ael-maar <ael-maar@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 15:19:08 by ael-maar          #+#    #+#             */
-/*   Updated: 2023/10/23 17:12:17 by ael-maar         ###   ########.fr       */
+/*   Updated: 2023/10/26 11:22:17 by ael-maar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <iostream>
 #include "Array.hpp"
 
-int main(void)
+#define MAX_VAL 750
+int main(int, char**)
 {
-    Array<int> arr(5);
-    Array<std::string> str(3);
+    Array<int> numbers(MAX_VAL);
+    int* mirror = new int[MAX_VAL];
+    srand(time(NULL));
+    for (int i = 0; i < MAX_VAL; i++)
+    {
+        const int value = rand();
+        numbers[i] = value;
+        mirror[i] = value;
+    }
+    //SCOPE
+    {
+        Array<int> tmp = numbers;
+        Array<int> test(tmp);
+    }
+
+    for (int i = 0; i < MAX_VAL; i++)
+    {
+        if (mirror[i] != numbers[i])
+        {
+            std::cerr << "didn't save the same value!!" << std::endl;
+            return 1;
+        }
+    }
     try
     {
-        for (unsigned int i = 0; i < arr.size(); i++)
-            arr[i] = i;
-        for (unsigned int i = 0; i < str.size(); i++)
-            str[i] = "Hello";
-        for (unsigned int i = 0; i < arr.size(); i++)
-            std::cout << arr[i] << std::endl;
-        for (unsigned int i = 0; i < str.size(); i++)
-            std::cout << str[i] << std::endl;
-        std::cout << arr[10] << std::endl;
+        numbers[-2] = 0;
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << ": " << "Out of range" << std::endl;
+        std::cerr << e.what() << ": out of range" << '\n';
     }
-    
-    return (EXIT_SUCCESS);
+    try
+    {
+        numbers[MAX_VAL] = 0;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << ": out of range" << '\n';
+    }
+
+    for (int i = 0; i < MAX_VAL; i++)
+    {
+        numbers[i] = rand();
+    }
+    delete [] mirror;//
+    return 0;
 }
